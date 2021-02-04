@@ -26,14 +26,6 @@ public class AuthorizationController {
         return "Főoldal";
     }
 
-    //@Secured("ROLL_USER")
-    //@PreAuthorize("hasAuthority('USER')")
-    @RequestMapping("/login")
-    public String login(){
-        return "Login";
-    }
-    //@Secured("ROLL_ADMIN")
-    //@PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping("/admin")
     public String admin(){
         return "Admin";
