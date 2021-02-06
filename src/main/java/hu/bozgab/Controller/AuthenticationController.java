@@ -17,7 +17,7 @@ public class AuthenticationController {
 
     @RequestMapping("/")
     public String index(){
-        return "Főoldal";
+        return "Main";
     }
 
     @RequestMapping("/user")
