@@ -1,4 +1,4 @@
-package hu.bozgab.Entities;
+package hu.bozgab.Entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
