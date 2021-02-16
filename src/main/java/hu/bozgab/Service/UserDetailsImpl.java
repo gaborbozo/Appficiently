@@ -1,24 +1,29 @@
 package hu.bozgab.Service;
 
+import hu.bozgab.Entity.Role;
 import hu.bozgab.Entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
-public class UserDetailsService implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
     private User user;
 
-    public UserDetailsService(User user){
+    public UserDetailsImpl(User user){
         this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        Collection<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+        Set<Role> roles = user.getRoles();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getRole()));
+        }
+        return authorities;
     }
 
     @Override
@@ -28,6 +33,8 @@ public class UserDetailsService implements UserDetails {
 
     @Override
     public String getPassword() { return user.getPassword(); }
+
+    public Date getRegistered() {return user.getRegistered(); }
 
     @Override
     public boolean isAccountNonExpired() {

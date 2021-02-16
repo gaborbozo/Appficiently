@@ -1,20 +1,42 @@
 package hu.bozgab.Entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class User {
+
     @GeneratedValue
-    //@GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private Long id;
+
     private String name;
+
+    @Column( unique=true, nullable=false )
     private String email;
+
+    @Column( nullable=false )
     private String password;
 
+    private Date registered;
+
+    @ManyToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER )
+    @JoinTable(
+            name = "user_role",
+            joinColumns = {@JoinColumn(name="user_id")},
+            inverseJoinColumns = {@JoinColumn(name="role_id")}
+    )
+    private Set<Role> roles = new HashSet<Role>();
+
     public User() {}
+
+    public User(String name, String email, String password){
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
     public Long getId() {
         return id;
@@ -32,6 +54,12 @@ public class User {
         return password;
     }
 
+    public Date getRegistered() { return registered; }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -46,5 +74,17 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setRegistered(Date registered) { this.registered = registered; }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRoles(String roleName) {
+        if (this.roles == null || this.roles.isEmpty())
+            this.roles = new HashSet<>();
+        this.roles.add(new Role(roleName));
     }
 }
