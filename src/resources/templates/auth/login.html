@@ -1,0 +1,19 @@
+<div th:fragment="LoginContent">
+    <form th:action="@{/login}" method="POST">
+        <h1>Bejelentkezés</h1>
+        <div th:if="${param.error}" class="alert alert-danger">
+            Hibás felhasználói név és jelszó
+        </div>
+        <div th:if="${param.logout}" class="alert alert-success">
+            Sikeres kijelentkezés
+        </div>
+
+
+        <label for="username">Felhasználónév</label>
+            <input type="text" name="username" id="username" placeholder="Username" required="true">
+        <label for="password">Jelszó</label>
+            <input type="password" name="password" id="password" placeholder="Password" required="true">
+
+        <button type="submit">Bejelentkezés</button>
+    </form>
+</div>
