@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <div th:replace="layout/links :: link"></div>
+
+    <title>Bejelentkezés</title>
+</head>
+<body>
+<header th:replace="layout/nav :: navbar">
+</header>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <div sec:authorize="!isAuthenticated()" th:fragment="LoginContent">
+
+                <style>
+
+                    #formLogin div img{
+                        height: 30px;
+                    }
+
+                </style>
+
+                <div th:fragment="LoginContentParams">
+                    <div th:if="${param.register}" class="alert alert-success">
+                        Sikeres regisztráció!
+                    </div>
+                    <div th:if="${param.error}" class="alert alert-danger">
+                        Hibás felhasználói név és jelszó!
+                    </div>
+                    <div th:if="${param.logout}" class="alert alert-success">
+                        Sikeres kijelentkezés!
+                    </div>
+                </div>
+
+                <form id="formLogin" th:action="@{/login}" method="POST" name="Login">
+
+                    <h1>Bejelentkezés</h1>
+
+                    <div class="col-12">
+                        <img src="icon/username.svg">
+                        <input type="text" class="form-control" name="username" id="username" placeholder="Felhasználónév" required="true">
+                    </div>
+                    <div class="col-12">
+                        <img src="icon/password.svg">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Jelszó" required="true">
+                    </div>
+            
+                    <button class="btn btn-primary" type="submit">Bejelentkezés</button>
+                </form>
+
+                <div>
+                    <h5>Még nincs fiókod? <a href="/registration">Regisztrálj</a></h5>
+                </div>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <form sec:authorize="isAuthenticated()" id="frmlogout" th:action="@{/logout}" method="post" class="form-inline">
+                    <h1>Újbóli bejelentkezéshez előbb jelentkezz ki!</h1>
+                    <a class="btn btn-warning" href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;">Kijelentkezés</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

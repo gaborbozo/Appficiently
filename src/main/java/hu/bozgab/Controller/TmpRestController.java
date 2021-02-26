@@ -25,11 +25,4 @@ public class TmpRestController {
     public String admin(){
         return "Admin";
     }
-
-    @RequestMapping("/reg")
-    public String register() {
-        User user = new User("exampleUser","example@email","examplePass");
-        userService.registerUser(user);
-        return "Registered Succesfully";
-    }
 }

@@ -1,0 +1,63 @@
+<header th:fragment="navbar">
+	<style>
+
+		.nav-image{
+			height: 20px;
+		}
+
+		.nav-item-right{
+			margin-left: auto;
+			margin-right: 5px;
+		}
+
+	</style>
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light" style="max-height: 50px; width: 100%">
+
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarToggle">
+			<a class="navbar-brand">Appficiently</a>
+
+			<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+				<li class="nav-item">
+					<a class="nav-link" href="/index">Index</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/index">Index</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/index">Index</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/index">Index</a>
+				</li>
+			</ul>
+
+			<div class="nav-item nav-item-right">
+				<div sec:authorize="!isAuthenticated()">
+					<img class="nav-image" src="icon/signin.svg">
+					<a href="/login">Bejelentkezés</a>
+				</div>
+				<div sec:authorize="isAuthenticated()">
+					Bejelentkezve: <span sec:authentication="name">Ismeretlen </span>
+					<form id="frmlogout" th:action="@{/logout}" method="post" class="form-inline">
+						<img class="nav-image" src="icon/signout.svg">
+						<a href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;">Kijelentkezés</a>
+					</form>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<script>
+		$(document).ready(function () {
+			$('.navbar-nav .nav-item').click(function () {
+				$('.navbar-nav .nav-item').removeClass('active');
+				$(this).addClass('active');
+			})
+		});
+	</script>
+</header>

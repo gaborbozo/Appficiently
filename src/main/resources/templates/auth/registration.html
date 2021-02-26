@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <div th:replace="layout/links :: link"></div>
+
+    <style>
+
+        #formRegister div img{
+            height: 30px;
+        }
+
+
+    </style>
+
+    <title>Regisztráció</title>
+</head>
+<body>
+<header th:replace="layout/nav :: navbar">
+</header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div sec:authorize="!isAuthenticated()">
+                <form id="formRegister" th:action="@{/register}" th:object="${user}" method="POST">
+                    <h1>Regisztráció</h1>
+
+                    <div class="col-12">
+                        <img src="icon/username.svg">
+                        <input type="text" class="form-control" name="name" th:filed="*{name}" placeholder="Felhasználónév" required="true">
+                    </div>
+                    <div class="col-12">
+                        <img src="icon/email.svg">
+                        <input type="email" class="form-control" name="email" th:filed="*{email}" placeholder="E-mail" required="true">
+                    </div>
+                    <div class="col-12">
+                        <img src="icon/password.svg">
+                        <input type="password" class="form-control" name="password" th:filed="*{password}" placeholder="Jelszó" required="true">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Regisztráció</button>
+                </form>
+            </div>
+            <div>
+                <div sec:authorize="isAuthenticated()">
+                    <form sec:authorize="isAuthenticated()" id="frmlogout" th:action="@{/logout}" method="post" class="form-inline">
+                        <h1>Regisztrációhoz előbb jelentkezz ki!</h1>
+                        <a class="btn btn-warning" href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;">Kijelentkezés</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
