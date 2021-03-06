@@ -15,12 +15,7 @@ public class Role {
     @Column(name = "role")
     private String role;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_role",
-            joinColumns = {@JoinColumn(name="role_id")},
-            inverseJoinColumns = {@JoinColumn(name="user_id")}
-    )
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<User>();
 
     public Role(){}
