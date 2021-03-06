@@ -16,22 +16,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception{
         http.authorizeRequests()
 
-                .antMatchers("/**").permitAll()
+                .antMatchers("/icon/*").permitAll()
 
+                .antMatchers("/","/index","/login","/registration","/register","/create").permitAll()
 
+                .antMatchers("/settings").hasRole("USER")
 
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/").permitAll()
-                .antMatchers("/index").permitAll()
-                .antMatchers("/registration").permitAll()
-                .antMatchers("/register").permitAll()
-                .anyRequest().authenticated() //Incidentally, all requests are denied
-                .and()
-                .formLogin()
+
+                .anyRequest().denyAll() //Incidentally, all requests are denied
+
+                .and().formLogin()
                     .loginPage("/login")
                     .failureUrl("/login?error")
                     .loginProcessingUrl("/login")
-                    .defaultSuccessUrl("/user", true)
+                    .defaultSuccessUrl("/index", true)
                     .permitAll()
                     .and()
                 .logout()

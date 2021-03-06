@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="hu"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <div th:replace="layout/links :: link"></div>
-
     <title>Bejelentkezés</title>
 </head>
+<head th:replace="layout/head :: head"></head>
 <body>
-<header th:replace="layout/nav :: navbar">
-</header>
+    <header th:replace="layout/nav :: navbar">
+    </header>
 
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
 
             <div sec:authorize="!isAuthenticated()" th:fragment="LoginContent">
@@ -24,34 +25,37 @@
                         height: 30px;
                     }
 
+                    #formLogin input{
+                        display: inline;
+                    }
+
                 </style>
 
                 <div th:fragment="LoginContentParams">
-                    <div th:if="${param.register}" class="alert alert-success">
+                    <div class="alert alert-success" th:if="${param.register}">
                         Sikeres regisztráció!
                     </div>
-                    <div th:if="${param.error}" class="alert alert-danger">
+                    <div class="alert alert-danger" th:if="${param.error}">
                         Hibás felhasználói név és jelszó!
                     </div>
-                    <div th:if="${param.logout}" class="alert alert-success">
+                    <div class="alert alert-success" th:if="${param.logout}">
                         Sikeres kijelentkezés!
                     </div>
                 </div>
 
-                <form id="formLogin" th:action="@{/login}" method="POST" name="Login">
-
+                <form method="POST" name="Login" id="formLogin" th:action="@{/login}">
                     <h1>Bejelentkezés</h1>
-
-                    <div class="col-12">
-                        <img src="icon/username.svg">
-                        <input type="text" class="form-control" name="username" id="username" placeholder="Felhasználónév" required="true">
+                    <div class="form-group row">
+                        <label for="username" class="col-sm-1 col-form-label"><img src="icon/username.svg"></label>
+                        <div class="col-11">
+                            <input type="text" class="form-control" name="username" id="username" placeholder="Felhasználónév vagy E-mail cím" required="true">
+                        </div>
+                        <label for="password" class="col-sm-1 col-form-label"><img src="icon/password.svg"></label>
+                        <div class="col-11">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Jelszó" required="true">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Bejelentkezés</button>
                     </div>
-                    <div class="col-12">
-                        <img src="icon/password.svg">
-                        <input type="password" class="form-control" name="password" id="password" placeholder="Jelszó" required="true">
-                    </div>
-            
-                    <button class="btn btn-primary" type="submit">Bejelentkezés</button>
                 </form>
 
                 <div>
@@ -59,7 +63,7 @@
                 </div>
             </div>
             <div sec:authorize="isAuthenticated()">
-                <form sec:authorize="isAuthenticated()" id="frmlogout" th:action="@{/logout}" method="post" class="form-inline">
+                <form method="POST" class="form-inline" id="frmlogout" sec:authorize="isAuthenticated()" th:action="@{/logout}">
                     <h1>Újbóli bejelentkezéshez előbb jelentkezz ki!</h1>
                     <a class="btn btn-warning" href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;">Kijelentkezés</a>
                 </form>

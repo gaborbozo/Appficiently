@@ -2,21 +2,23 @@ package hu.bozgab.Controller;
 
 
 import hu.bozgab.Entity.User;
-import hu.bozgab.Service.Interface.UserService;
+import hu.bozgab.Service.Interface.IUserService;
+import hu.bozgab.Service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class HomeController {
+public class AuthenticationController {
 
-    UserService userService;
+    IUserService userService;
 
     @Autowired
-    public void setUserService(UserService userService){
+    public void setUserService(IUserService userService){
         this.userService = userService;
     }
 
@@ -37,11 +39,18 @@ public class HomeController {
         return "auth/registration.html";
     }
 
-    //@RequestMapping("/register")
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@ModelAttribute User user, Model model) {
+    @PostMapping("/register")
+    //@RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String register(@ModelAttribute User user) {
         userService.registerUser(user);
-        model.addAttribute("email", true);
         return "redirect:/index?register";
+    }
+
+    @RequestMapping("/settings")
+    public String getuser(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model){
+
+        model.addAttribute("user", userDetails);
+
+        return "auth/settings.html";
     }
 }

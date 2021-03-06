@@ -7,22 +7,21 @@ xmlns:th="http://www.thymeleaf.org">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <div th:replace="layout/links :: link"></div>
-
-
+    <title>Appficiently</title>
 </head>
+<head th:replace="layout/head :: head"></head>
 <body>
-<header th:replace="layout/nav :: navbar">
-</header>
+    <header th:replace="layout/nav :: navbar">
+    </header>
 
-<div class="container-fluid">
-    <div class="row">
+    <div class="container-fluid">
+        <div class="row">
 
-        <div th:replace="auth/login :: LoginContentParams">
+            <div th:replace="auth/login :: LoginContentParams">
+            </div>
+
+
         </div>
-
-
     </div>
-</div>
 </body>
 </html>

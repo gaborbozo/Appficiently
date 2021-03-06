@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <div th:replace="layout/links :: link"></div>
 
     <style>
 
@@ -13,40 +13,40 @@
             height: 30px;
         }
 
-
     </style>
 
     <title>Regisztráció</title>
 </head>
+<head th:replace="layout/head :: head"></head>
 <body>
-<header th:replace="layout/nav :: navbar">
-</header>
+    <header th:replace="layout/nav :: navbar">
+    </header>
 
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div sec:authorize="!isAuthenticated()">
-                <form id="formRegister" th:action="@{/register}" th:object="${user}" method="POST">
-                    <h1>Regisztráció</h1>
-
-                    <div class="col-12">
-                        <img src="icon/username.svg">
-                        <input type="text" class="form-control" name="name" th:filed="*{name}" placeholder="Felhasználónév" required="true">
+                <form method="POST" id="formRegister" th:action="@{/register}" th:object="${user}">
+                    <h1 class="text-center">Regisztráció</h1>
+                    <div class="form-group row">
+                        <label for="username" class="col-sm-1 col-form-label"><img src="icon/username.svg"></label>
+                        <div class="col-11">
+                            <input type="text" class="form-control" name="username" id="username" placeholder="Felhasználónév" required="true" th:filed="*{username}">
+                        </div>
+                        <label for="email" class="col-sm-1 col-form-label"><img src="icon/email.svg"></label>
+                        <div class="col-11">
+                            <input type="email" class="form-control" name="email" id="email" placeholder="E-mail" required="true" th:filed="*{email}">
+                        </div>
+                        <label for="password" class="col-sm-1 col-form-label"><img src="icon/password.svg"></label>
+                        <div class="col-11">
+                            <input type="password" class="form-control" name="password" placeholder="Jelszó" required="true" th:filed="*{password}">
+                        </div>
+                        <button type="submit" class="btn btn-primary col-2">Regisztráció</button>
                     </div>
-                    <div class="col-12">
-                        <img src="icon/email.svg">
-                        <input type="email" class="form-control" name="email" th:filed="*{email}" placeholder="E-mail" required="true">
-                    </div>
-                    <div class="col-12">
-                        <img src="icon/password.svg">
-                        <input type="password" class="form-control" name="password" th:filed="*{password}" placeholder="Jelszó" required="true">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Regisztráció</button>
                 </form>
             </div>
             <div>
                 <div sec:authorize="isAuthenticated()">
-                    <form sec:authorize="isAuthenticated()" id="frmlogout" th:action="@{/logout}" method="post" class="form-inline">
+                    <form method="POST" class="form-inline" id="frmlogout" sec:authorize="isAuthenticated()" th:action="@{/logout}">
                         <h1>Regisztrációhoz előbb jelentkezz ki!</h1>
                         <a class="btn btn-warning" href="javascript:{}" onclick="document.getElementById('frmlogout').submit(); return false;">Kijelentkezés</a>
                     </form>

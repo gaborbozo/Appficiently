@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="hu"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Beállítások</title>
+</head>
+<head th:replace="layout/head :: head"></head>
+<body>
+    <header th:replace="layout/nav :: navbar">
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div>Regisztráció ideje :</div>
+                <div th:text="${user.getRegistered()}"></div>
+            </div>
+            <div class="col-12">
+                <label for="email">E-mail címed</label>
+                <input readonly type="text" class="form-control" id="email" th:value="${user.getEmail()}">
+            </div>
+
+            <form>
+                <div class="col-12">
+                    <label for="username">Felhasználó neved</label>
+                    <input type="text" class="form-control" name="username" id="username" required="true" th:value="${user.getUsername()}">
+                </div>
+
+                <h1>Jelszó módosítás</h1>
+
+                <div class="col-12">
+                    <label for="Jelenlegi jelszavad">Jelenlegi jelszavad</label>
+                    <input type="password" class="form-control" id="currentPassword" placeholder="Jelenlegi jelszavad" required="true">
+                </div>
+
+                <div class="col-12">
+                    <label for="Új jelszavad">Új jelszavad</label>
+                    <input type="newPassword" class="form-control" id="newPassword" placeholder="Új jelszavad" required="true">
+                </div>
+
+                <div class="col-12">
+                    <label for="newPasswordAgain">Új jelszavad ismét</label>
+                    <input type="password" class="form-control" name="newPasswordAgain" id="password" placeholder="Új jelszavad ismét" required="true">
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -27,12 +27,12 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
-        return this.user.getName();
-    }
+    public String getUsername() { return this.user.getUsername(); }
 
     @Override
     public String getPassword() { return user.getPassword(); }
+
+    public String getEmail() {return user.getEmail(); }
 
     public Date getRegistered() {return user.getRegistered(); }
 

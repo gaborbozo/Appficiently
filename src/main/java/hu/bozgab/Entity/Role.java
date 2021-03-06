@@ -1,9 +1,6 @@
 package hu.bozgab.Entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,11 +9,18 @@ public class Role {
 
     @Id
     @GeneratedValue
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "role")
     private String role;
 
-    @ManyToMany( mappedBy = "roles")
+    @ManyToMany
+    @JoinTable(
+            name = "user_role",
+            joinColumns = {@JoinColumn(name="role_id")},
+            inverseJoinColumns = {@JoinColumn(name="user_id")}
+    )
     private Set<User> users = new HashSet<User>();
 
     public Role(){}
