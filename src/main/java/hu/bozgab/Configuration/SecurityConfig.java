@@ -18,11 +18,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/icon/*").permitAll()
 
-                .antMatchers("/","/index","/login","/registration","/register","/create").permitAll()
+                .antMatchers("/","/index","/login","/registration","/validateRegistration").permitAll()
 
-                .antMatchers("/settings").hasRole("USER")
+                .antMatchers("/settings","/createExercise","/validateCreateExercise").hasRole("USER") //extract in the future (createExercise, validateCreateExercise)
 
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/admin/**", "/createExercise","/validateCreateExercise").hasRole("ADMIN")
 
                 .anyRequest().denyAll() //Incidentally, all requests are denied
 

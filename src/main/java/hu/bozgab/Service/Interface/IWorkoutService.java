@@ -4,5 +4,5 @@ import hu.bozgab.Entity.Exercise;
 
 public interface IWorkoutService {
 
-    public void savework(Exercise exercise);
+    public void saveExercise(Exercise exercise);
 }

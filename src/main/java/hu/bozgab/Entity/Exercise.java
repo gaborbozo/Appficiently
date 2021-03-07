@@ -11,24 +11,23 @@ public class Exercise {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "exercise")
-    private String exercise;
+    @Column(name = "activity")
+    private String activity;
 
     @OneToMany(mappedBy = "exercise")
     List<Workout> workouts;
 
-
     public Exercise(){}
 
-    public Exercise(String exercise) {this.exercise = exercise;}
+    public Exercise(String activity) {this.activity = activity;}
 
     public Long getId() { return this.id; }
 
     public void setId(Long id) { this.id = id; }
 
-    public String getExercise() { return this.exercise; }
+    public String getActivity() { return this.activity; }
 
-    public void setExercise(String exercise) { this.exercise = exercise; }
+    public void setActivity(String activity) { this.activity = activity; }
 
     public List<Workout> getWorkouts(){ return this.workouts; }
 

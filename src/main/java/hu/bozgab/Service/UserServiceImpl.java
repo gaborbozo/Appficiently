@@ -53,6 +53,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         } else {
             user.addRoles("ROLE_USER");
         }
+
         user.setRegistered(new Date());
         userRepository.save(user);
     }

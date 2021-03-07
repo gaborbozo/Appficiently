@@ -21,7 +21,7 @@ public class WorkoutService implements IWorkoutService {
     }
 
     @Override
-    public void savework(Exercise exercise) {
+    public void saveExercise(Exercise exercise) {
         exerciseRepository.save(exercise);
     }
 }

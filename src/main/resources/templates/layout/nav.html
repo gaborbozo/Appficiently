@@ -37,6 +37,9 @@
 				<li class="nav-item">
 					<a class="nav-link" href="">Eddz!</a>
 				</li>
+				<li sec:authorize="hasRole('ROLE_USER')">
+					<a class="nav-link" href="/createExercise">Új gyakorlat</a>
+				</li>
 			</ul>
 
 			<div class="nav-item nav-item-right">

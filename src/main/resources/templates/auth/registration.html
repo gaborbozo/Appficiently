@@ -25,20 +25,20 @@ xmlns:th="http://www.thymeleaf.org">
     <div class="container">
         <div class="row">
             <div sec:authorize="!isAuthenticated()">
-                <form method="POST" id="formRegister" th:action="@{/register}" th:object="${user}">
+                <form method="POST" id="formRegister" th:action="@{/validateRegistration}" th:object="${user}">
                     <h1 class="text-center">Regisztráció</h1>
                     <div class="form-group row">
                         <label for="username" class="col-sm-1 col-form-label"><img src="icon/username.svg"></label>
                         <div class="col-11">
-                            <input type="text" class="form-control" name="username" id="username" placeholder="Felhasználónév" required="true" th:filed="*{username}">
+                            <input type="text" class="form-control" name="username" id="username" placeholder="Felhasználónév" required="true" th:field="*{username}">
                         </div>
                         <label for="email" class="col-sm-1 col-form-label"><img src="icon/email.svg"></label>
                         <div class="col-11">
-                            <input type="email" class="form-control" name="email" id="email" placeholder="E-mail" required="true" th:filed="*{email}">
+                            <input type="email" class="form-control" name="email" id="email" placeholder="E-mail" required="true" th:field="*{email}">
                         </div>
                         <label for="password" class="col-sm-1 col-form-label"><img src="icon/password.svg"></label>
                         <div class="col-11">
-                            <input type="password" class="form-control" name="password" placeholder="Jelszó" required="true" th:filed="*{password}">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Jelszó" required="true" th:field="*{password}">
                         </div>
                         <button type="submit" class="btn btn-primary col-2">Regisztráció</button>
                     </div>

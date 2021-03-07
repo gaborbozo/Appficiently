@@ -39,9 +39,9 @@ public class AuthenticationController {
         return "auth/registration.html";
     }
 
-    @PostMapping("/register")
+    @PostMapping("/validateRegistration")
     //@RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@ModelAttribute User user) {
+    public String validateregistration(@ModelAttribute User user) {
         userService.registerUser(user);
         return "redirect:/index?register";
     }
