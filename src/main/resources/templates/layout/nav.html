@@ -32,10 +32,13 @@
 					<a class="nav-link" href="/settings">Beállítások</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="">Készíts edzést</a>
+					<a class="nav-link" href="/manageWorkout">Edzés kezelése</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="">Eddz!</a>
+					<a class="nav-link" href="/manageWorkout">Edzéseim</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="">Edzek!</a>
 				</li>
 				<li sec:authorize="hasRole('ROLE_USER')">
 					<a class="nav-link" href="/createExercise">Új gyakorlat</a>

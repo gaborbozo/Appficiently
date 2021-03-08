@@ -2,7 +2,11 @@ package hu.bozgab.Service.Interface;
 
 import hu.bozgab.Entity.Exercise;
 
+import java.util.List;
+
 public interface IWorkoutService {
 
-    public void saveExercise(Exercise exercise);
+    void saveExercise(Exercise exercise);
+
+    List<Exercise> getAllExercises();
 }

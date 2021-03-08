@@ -27,6 +27,10 @@ public class Workout {
     @Column(name = "comment")
     private String comment;
 
+    public Workout() {}
+
+    public Workout(String comment) {this.comment = comment; }
+
     public Long getId() {
         return this.id;
     }

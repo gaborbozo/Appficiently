@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="hu"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edzés létrehozása</title>
+</head>
+<head th:replace="layout/head :: head"></head>
+<body>
+<header th:replace="layout/nav :: navbar">
+</header>
+
+<div class="container">
+    <div class="row">
+
+        <div th:if="${workouts.empty}">
+            <h1 class="text-center">Üres vagyok :(. Kérlek <a href="/myWorkouts" class="text-decoration-none">válassz ki egy edzést</a>, vagy <a href="/addWorkoutItem?id=0" class="text-decoration-none">hozz létre egy újat.</a></h1>
+        </div>
+        <div th:if="${!workouts.empty}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Gyakorlat</th>
+                    <th scope="col">Darabszám</th>
+                    <th scope="col">Megjegyzés</th>
+                    <th scope="col">#</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="workout,getStat : ${workouts}">
+                    <td th:text="${workout.comment}"></td>
+                    <td th:text="${getStat.index}"></td>
+                    <td><a th:href="@{'/addWorkoutItem?id=' + ${getStat.index}}">Új elem föl</a></td>
+                    <td><a th:href="@{'/addWorkoutItem?id=' + ${getStat.index+1}}">Új elem le</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+</div>
+</body>
+</html>

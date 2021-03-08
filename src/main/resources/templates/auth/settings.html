@@ -27,19 +27,19 @@ xmlns:th="http://www.thymeleaf.org">
 
             <form>
                 <div class="col-12">
-                    <label for="username">Felhasználó neved</label>
+                    <label for="username">Felhasználóneved</label>
                     <input type="text" class="form-control" name="username" id="username" required="true" th:value="${user.getUsername()}">
                 </div>
 
                 <h1>Jelszó módosítás</h1>
 
                 <div class="col-12">
-                    <label for="Jelenlegi jelszavad">Jelenlegi jelszavad</label>
+                    <label for="currentPassword">Jelenlegi jelszavad</label>
                     <input type="password" class="form-control" id="currentPassword" placeholder="Jelenlegi jelszavad" required="true">
                 </div>
 
                 <div class="col-12">
-                    <label for="Új jelszavad">Új jelszavad</label>
+                    <label for="newPassword">Új jelszavad</label>
                     <input type="newPassword" class="form-control" id="newPassword" placeholder="Új jelszavad" required="true">
                 </div>
 
