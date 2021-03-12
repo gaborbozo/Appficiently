@@ -32,7 +32,7 @@ public class User {
     private Set<Role> roles = new HashSet<Role>();
 
     @OneToMany(mappedBy = "user")
-    private List<Workout> workouts;
+    private List<WorkoutInformation> workoutInformation = new ArrayList<>();
 
     public User(){}
 
@@ -91,7 +91,9 @@ public class User {
         this.roles.add(new Role(roleName));
     }
 
-    public List<Workout> getWorkouts(){ return this.workouts; }
+    public List<WorkoutInformation> getWorkoutInformation() { return this.workoutInformation; }
 
-    public void setWorkouts(List<Workout> workouts){ this.workouts = workouts; }
+    public void setWorkoutInformation(List<WorkoutInformation>workoutInformation) { this.workoutInformation = workoutInformation; }
+
+    public void addWorkoutInformation(WorkoutInformation workoutInformation) { this.workoutInformation.add(workoutInformation); }
 }

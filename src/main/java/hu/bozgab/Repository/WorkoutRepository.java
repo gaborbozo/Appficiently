@@ -8,9 +8,4 @@ import java.util.List;
 
 public interface WorkoutRepository extends CrudRepository<Workout,Long> {
 
-    @Query("SELECT max(item.workout_id) FROM Workout item")
-    Long findMaxWorkoutId();
-
-    List<Workout> findAllByUser_id(long id);
-
 }

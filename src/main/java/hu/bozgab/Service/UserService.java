@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class UserServiceImpl implements IUserService, UserDetailsService {
+public class UserService implements IUserService, UserDetailsService {
 
     private UserRepository userRepository;
 
     private RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }

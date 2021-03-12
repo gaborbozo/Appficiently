@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class AuthenticationController {
 
@@ -21,7 +23,7 @@ public class AuthenticationController {
     public void setUserService(IUserService userService){ this.userService = userService; }
 
     @RequestMapping("/")
-    public String defaultIndex(){
+    public String defaultIndex(HttpSession session){
 
         return "index.html";
 
@@ -35,7 +37,7 @@ public class AuthenticationController {
     }
 
     @RequestMapping("/login")
-    public String login(){
+    public String login(HttpSession session){
 
         return "auth/login.html";
 

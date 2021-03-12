@@ -10,15 +10,10 @@ public class Workout {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "workout_id")
-    private long workout_id;
+    @ManyToOne
+    private WorkoutInformation workoutInformation;
 
     @ManyToOne
-    //@JoinColumn(name="id")
-    private User user;
-
-    @ManyToOne
-    //@JoinColumn(name = "id")
     private Exercise exercise;
 
     @Column(name = "count")
@@ -31,21 +26,17 @@ public class Workout {
 
     public Workout(Exercise exercise) {this.exercise = exercise; }
 
+    public Workout(String comment) {this.comment = comment; }
+
     public long getId() {
         return this.id;
     }
 
     public void setId(long id) { this.id = id; }
 
-    public long getWorkout_id() { return this.workout_id; }
+    public WorkoutInformation getWorkoutInformation() { return this.workoutInformation; }
 
-    public void setWorkout_id(long workout_id) { this.workout_id = workout_id; }
-
-    public User getUser() {
-        return this.user;
-    }
-
-    public void setUser(User user) { this.user = user; }
+    public void setWorkoutInformation(WorkoutInformation workoutInformation) { this.workoutInformation = workoutInformation; }
 
     public Exercise getExercise() {
         return this.exercise;

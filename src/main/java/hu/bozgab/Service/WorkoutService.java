@@ -3,14 +3,15 @@ package hu.bozgab.Service;
 import hu.bozgab.Entity.Exercise;
 import hu.bozgab.Entity.User;
 import hu.bozgab.Entity.Workout;
+import hu.bozgab.Entity.WorkoutInformation;
 import hu.bozgab.Repository.ExerciseRepository;
 import hu.bozgab.Repository.UserRepository;
 import hu.bozgab.Repository.WorkoutRepository;
+import hu.bozgab.Repository.WorkoutInformationRepository;
 import hu.bozgab.Service.Interface.IWorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -18,13 +19,16 @@ public class WorkoutService implements IWorkoutService {
 
     private WorkoutRepository workoutRepository;
 
+    private WorkoutInformationRepository workoutInformationRepository;
+
     private ExerciseRepository exerciseRepository;
 
     private UserRepository userRepository;
 
     @Autowired
-    WorkoutService(WorkoutRepository workoutRepository, ExerciseRepository exerciseRepository, UserRepository userRepository){
+    WorkoutService(WorkoutRepository workoutRepository, WorkoutInformationRepository workoutInformationRepository, ExerciseRepository exerciseRepository, UserRepository userRepository){
         this.workoutRepository = workoutRepository;
+        this.workoutInformationRepository = workoutInformationRepository;
         this.exerciseRepository = exerciseRepository;
         this.userRepository = userRepository;
     }
@@ -40,16 +44,20 @@ public class WorkoutService implements IWorkoutService {
     }
 
     @Override
-    public void saveWorkout(Workout workout) {
-        workoutRepository.save(workout);
-    }
-
-    @Override
     public User getCurrentUser(long id) { return userRepository.findById(id); }
 
     @Override
-    public Long getMaxWorkoutId() { return workoutRepository.findMaxWorkoutId(); }
+    public WorkoutInformation findWorkoutInformationById(long id) { return workoutInformationRepository.findById(id); }
 
     @Override
-    public List<Workout> getAllWorkouts(long id) { return workoutRepository.findAllByUser_id(id); }
+    public void insertWorkout(WorkoutInformation workoutInformation) {
+        List<Workout> workouts = workoutInformation.getWorkouts();
+
+        workoutInformationRepository.save(workoutInformation);
+
+        for(Workout item: workouts) {
+            item.setWorkoutInformation(workoutInformation);
+            workoutRepository.save(item);
+        }
+    }
 }

@@ -2,7 +2,7 @@ package hu.bozgab.Service.Interface;
 
 import hu.bozgab.Entity.Exercise;
 import hu.bozgab.Entity.User;
-import hu.bozgab.Entity.Workout;
+import hu.bozgab.Entity.WorkoutInformation;
 
 import java.util.List;
 
@@ -12,11 +12,9 @@ public interface IWorkoutService {
 
     List<Exercise> getAllExercises();
 
-    void saveWorkout(Workout workout);
-
     User getCurrentUser(long id);
 
-    Long getMaxWorkoutId();
+    WorkoutInformation findWorkoutInformationById(long id);
 
-    List<Workout> getAllWorkouts(long id);
+    void insertWorkout(WorkoutInformation workoutInformation);
 }

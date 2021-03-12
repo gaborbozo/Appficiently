@@ -3,17 +3,17 @@ package hu.bozgab.Controller;
 import hu.bozgab.Entity.Exercise;
 import hu.bozgab.Entity.User;
 import hu.bozgab.Entity.Workout;
+import hu.bozgab.Entity.WorkoutInformation;
 import hu.bozgab.Repository.ExerciseRepository;
 import hu.bozgab.Repository.UserRepository;
 import hu.bozgab.Repository.WorkoutRepository;
+import hu.bozgab.Repository.WorkoutInformationRepository;
 import hu.bozgab.Service.Interface.IWorkoutService;
 import hu.bozgab.Service.UserDetailsImpl;
 import hu.bozgab.Service.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -35,9 +35,7 @@ public class WorkoutController {
     ExerciseRepository er;
     WorkoutRepository wr;
     UserRepository ur;
-
-    //Long type needed because of null
-    Long currentWorkoutId = null;
+    WorkoutInformationRepository workout_informationRepository;
 
     @Autowired
     public void setUr(UserRepository ur) { this.ur = ur; }
@@ -50,6 +48,9 @@ public class WorkoutController {
 
     @Autowired
     public void setWorkoutService(WorkoutService workoutService) { this.workoutService = workoutService; }
+
+    @Autowired
+    public void setWorkout_informationRepository(WorkoutInformationRepository workout_informationRepository) { this.workout_informationRepository = workout_informationRepository; }
 
     @RequestMapping("/createExercise")
     public String createExercise(Model model){
@@ -77,10 +78,20 @@ public class WorkoutController {
             session.setAttribute("WORKOUT_MANAGER", workouts);
         }
 
-        model.addAttribute("workout", new Workout());
+        @SuppressWarnings("unchecked")
+        String workoutName = (String) session.getAttribute("WORKOUT_NAME");
+        if(workoutName == null){
+            workoutName = "Edzés";
+            session.setAttribute("WORKOUT_NAME", workoutName);
+        }
+
         model.addAttribute("workouts", workouts);
-        model.addAttribute("sizeOfList",workouts.size());
+        model.addAttribute("workout", new Workout());
+
         model.addAttribute("exercises",workoutService.getAllExercises());
+
+        model.addAttribute("workoutName", workoutName);
+        model.addAttribute("workoutInformation", new WorkoutInformation());
 
         return "workout/manageWorkout.html";
     }
@@ -88,39 +99,43 @@ public class WorkoutController {
     @RequestMapping("/loadWorkout")
     public String loadWorkout(){
         //Betölt id alapján amit a myworkouts ad át, globális változóban eltárol és a validateManageWorkoutnál a globális változó értékét figyelembe véve adunk a workout táblához edzést
-        return "workout/manageWorkout.html";
+        return "redirect:/myWorkouts";
     }
 
     @RequestMapping("/validateManageWorkout")
-    public String validateManageWorkout(HttpSession session,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String validateManageWorkout(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpSession session) {
 
         @SuppressWarnings("unchecked")
         List<Workout> workouts = (List<Workout>) session.getAttribute("WORKOUT_MANAGER");
 
         if(workouts == null) return "redirect:/manageWorkout";
 
+        Long currentWorkoutId = (Long)session.getAttribute("WORKOUT_ID");
+
+        WorkoutInformation workoutInformation;
         if(currentWorkoutId == null) {
-            Long maxWorkoutId = workoutService.getMaxWorkoutId();
-            if(maxWorkoutId == null){
-                currentWorkoutId = (long)0;
-            } else {
-                currentWorkoutId = maxWorkoutId + 1;
-            }
+            workoutInformation = new WorkoutInformation(workoutService.getCurrentUser(userDetails.getId()),(String)session.getAttribute("WORKOUT_NAME"),new Date());
+        } else {
+            workoutInformation = workoutService.findWorkoutInformationById(currentWorkoutId.longValue());
         }
 
-        User currentUser = workoutService.getCurrentUser(userDetails.getId());
+        workoutInformation.setWorkouts(workouts);
 
-        for (Workout item: workouts){
-            item.setUser(currentUser);
-            item.setWorkout_id(currentWorkoutId);
-
-            workoutService.saveWorkout(item);
-        }
+        workoutService.insertWorkout(workoutInformation);
 
         currentWorkoutId = null;
         workouts.clear();
 
         return "redirect:/myWorkouts";
+    }
+
+    @PostMapping("/modifyWorkoutName")
+    public String modifyWorkoutName(HttpSession session, @ModelAttribute WorkoutInformation workoutInformation) {
+
+        if(workoutInformation.getName().length() == 0) return "redirect:/manageWorkout";
+        session.setAttribute("WORKOUT_NAME", workoutInformation.getName());
+
+        return "redirect:/manageWorkout";
     }
 
     @RequestMapping("/addWorkoutItem")
@@ -129,7 +144,9 @@ public class WorkoutController {
         @SuppressWarnings("unchecked")
         List<Workout> workouts = (List<Workout>) session.getAttribute("WORKOUT_MANAGER");
         if(workouts == null) return "redirect:/manageWorkout";
-        if(id >= 0 && id <= workouts.size()) workouts.add(id, new Workout(workoutService.getAllExercises().get(0)));
+        if(id >= 0 && id <= workouts.size()) {
+            workouts.add(id, new Workout(workoutService.getAllExercises().get(0)));
+        }
 
         return "redirect:/manageWorkout";
     }
@@ -164,12 +181,9 @@ public class WorkoutController {
     }
 
     @RequestMapping("/test")
-    public String test(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public String test(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpSession session){
         System.out.println("___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________");
 
-        List<Workout> workouts = wr.findAllByUser_id(userDetails.getId());
-
-        for(Workout item: workouts) System.out.println(item.getId());
         return "redirect:/index";
     }
 }

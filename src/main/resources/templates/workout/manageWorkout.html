@@ -22,11 +22,15 @@
 
         <div th:if="${!workouts.empty}">
 
-            <form action="/validateManageWorkout">
+            <form method="POST" th:action="@{'/validateManageWorkout'}">
                 <input type="submit" value="Edzés mentése" />
             </form>
 
-            <div id="sizeOfList"></div>
+            <form method="POST" target="addElement" th:action="@{'/modifyWorkoutName'}" th:object="${workoutInformation}">
+                <input type="text" name="name" placeholder="Edzés megnevezése" onchange="this.form.submit()" th:value="${workoutName}">
+            </form>
+
+            <div th:text="'Gyakorlatok jelenleg: ' + ${#lists.size(workouts)}"></div>
 
             <iframe name="addElement" style="display:none;"></iframe>
             <table class="table">
@@ -67,21 +71,16 @@
 </div>
 </div>
 
-<script th:inline="javascript">
-    /*<![CDATA[*/
-
-    var sizeOfList = /*[[${sizeOfList}]]*/ 'default';
-
-
-    /*]]>*/
+<script>
 
     function saveItem(i){
         document.getElementById("formPushItemToList" + i).submit();
     }
 
+    function modifyName(name){
+        document.getElementById("formPushItemToList" + i).submit();
+    }
 
-
-    document.getElementById("sizeOfList").innerHTML = `Gyakorlatok jelenleg: ${sizeOfList} db`;
 </script>
 </body>
 </html>
