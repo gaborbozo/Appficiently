@@ -16,33 +16,72 @@
 
 <div class="container">
     <div class="row">
-
         <div th:if="${workouts.empty}">
             <h1 class="text-center">Üres vagyok :(. Kérlek <a href="/myWorkouts" class="text-decoration-none">válassz ki egy edzést</a>, vagy <a href="/addWorkoutItem?id=0" class="text-decoration-none">hozz létre egy újat.</a></h1>
         </div>
+
         <div th:if="${!workouts.empty}">
+
+            <form action="/validateManageWorkout">
+                <input type="submit" value="Edzés mentése" />
+            </form>
+
+            <div id="sizeOfList"></div>
+
+            <iframe name="addElement" style="display:none;"></iframe>
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">Gyakorlat</th>
                     <th scope="col">Darabszám</th>
                     <th scope="col">Megjegyzés</th>
+                    <th scope="col">#</th>
+                    <th scope="col">#</th>
                     <th scope="col">#</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="workout,getStat : ${workouts}">
-                    <td th:text="${workout.comment}"></td>
-                    <td th:text="${getStat.index}"></td>
-                    <td><a th:href="@{'/addWorkoutItem?id=' + ${getStat.index}}">Új elem föl</a></td>
-                    <td><a th:href="@{'/addWorkoutItem?id=' + ${getStat.index+1}}">Új elem le</a></td>
-                </tr>
+
+                    <tr th:each="workout,getStat : ${workouts}">
+
+                        <form method="POST" target="addElement" th:id="'formPushItemToList' + ${getStat.index}" th:action="@{'/saveWorkoutItemToList?id='} + ${getStat.index}" th:object="${workout}">
+
+                            <td> <input type="number" name="count" placeholder="Darabszám" th:value="${workout.getCount()}" th:onchange="'saveItem('+${getStat.index}+')'"> </td>
+                            <td> <input type="text" name="comment" placeholder="Megjegyzés" th:value="${workout.getComment()}" th:onchange="'saveItem('+${getStat.index}+')'"> </td>
+                            <td>
+                                <select name="exercise" th:onchange="'saveItem('+${getStat.index}+')'">
+                                    <option th:each="exercise : ${exercises}" th:value="${exercise.getId()}" th:text="${exercise.getActivity()}" th:selected="${workout.getExercise().getId() == exercise.getId()}"></option>
+                                </select>
+                            </td>
+                            <td><a th:href="@{'/addWorkoutItem?id=' + ${getStat.index}}">Új elem föl</a></td>
+                            <td><a th:href="@{'/addWorkoutItem?id=' + ${getStat.index+1}}">Új elem le</a></td>
+                            <td><a th:href="@{'/removeWorkoutItem?id=' + ${getStat.index}}">Elem törlése</a></td>
+
+                        </form>
+
+                    </tr>
+
                 </tbody>
             </table>
         </div>
-
     </div>
 </div>
 </div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    var sizeOfList = /*[[${sizeOfList}]]*/ 'default';
+
+
+    /*]]>*/
+
+    function saveItem(i){
+        document.getElementById("formPushItemToList" + i).submit();
+    }
+
+
+
+    document.getElementById("sizeOfList").innerHTML = `Gyakorlatok jelenleg: ${sizeOfList} db`;
+</script>
 </body>
 </html>

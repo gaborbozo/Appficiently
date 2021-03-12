@@ -32,6 +32,8 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getPassword() { return user.getPassword(); }
 
+    public long getId() { return this.user.getId(); }
+
     public String getEmail() {return user.getEmail(); }
 
     public Date getRegistered() {return user.getRegistered(); }

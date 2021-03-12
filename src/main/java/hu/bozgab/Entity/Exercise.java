@@ -9,7 +9,7 @@ public class Exercise {
     @GeneratedValue
     @Id
     @Column(name = "id")
-    private Long id;
+    private long id;
 
     @Column(name = "activity")
     private String activity;
@@ -21,9 +21,9 @@ public class Exercise {
 
     public Exercise(String activity) {this.activity = activity;}
 
-    public Long getId() { return this.id; }
+    public long getId() { return this.id; }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(long id) { this.id = id; }
 
     public String getActivity() { return this.activity; }
 

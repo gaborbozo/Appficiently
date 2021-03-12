@@ -10,7 +10,7 @@ public class Role {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Long id;
+    private long id;
 
     @Column(name = "role")
     private String role;
@@ -24,11 +24,11 @@ public class Role {
         this.role=role;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

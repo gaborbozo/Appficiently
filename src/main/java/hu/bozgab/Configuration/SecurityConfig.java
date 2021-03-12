@@ -17,10 +17,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                 .antMatchers("/icon/*").permitAll()
+                .antMatchers("/css/*").permitAll()
+                .antMatchers("/js/*").permitAll()
 
-                .antMatchers("/","/index","/login","/registration","/validateRegistration","/create","/load").permitAll()
+                .antMatchers("/test").permitAll()
 
-                .antMatchers("/settings","/manageWorkout", "/addWorkoutItem", "/createExercise","/validateCreateExercise").hasRole("USER") //extract in the future (createExercise, validateCreateExercise)
+                .antMatchers("/","/index","/login","/registration","/validateRegistration").permitAll()
+
+                .antMatchers("/settings","/manageWorkout", "/validateManageWorkout",
+                        "/addWorkoutItem", "/removeWorkoutItem", "/saveWorkoutItemToList" ,
+                        "/createExercise","/validateCreateExercise").hasRole("USER") //extract in the future (createExercise, validateCreateExercise)
 
                 .antMatchers("/admin/**").hasRole("ADMIN")
 

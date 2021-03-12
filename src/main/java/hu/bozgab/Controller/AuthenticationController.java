@@ -18,31 +18,43 @@ public class AuthenticationController {
     IUserService userService;
 
     @Autowired
-    public void setUserService(IUserService userService){
-        this.userService = userService;
-    }
+    public void setUserService(IUserService userService){ this.userService = userService; }
 
     @RequestMapping("/")
-    public String defaultIndex(){ return "index.html"; }
+    public String defaultIndex(){
+
+        return "index.html";
+
+    }
 
     @RequestMapping("/index")
     public String index(){
+
         return "index.html";
+
     }
 
     @RequestMapping("/login")
-    public String login(){ return "auth/login.html"; }
+    public String login(){
+
+        return "auth/login.html";
+
+    }
 
     @RequestMapping("/registration")
     public String registration(Model model) {
+
         model.addAttribute("user",new User());
+
         return "auth/registration.html";
     }
 
     @PostMapping("/validateRegistration")
     //@RequestMapping(value = "/register", method = RequestMethod.POST)
     public String validateregistration(@ModelAttribute User user) {
+
         userService.registerUser(user);
+
         return "redirect:/index?register";
     }
 
