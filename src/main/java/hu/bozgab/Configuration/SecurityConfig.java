@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/settings","/manageWorkout", "/validateManageWorkout",
                         "/addWorkoutItem", "/removeWorkoutItem", "/saveWorkoutItemToList" , "/modifyWorkoutName",
-                        "/createExercise","/validateCreateExercise", "/myWorkouts").hasRole("USER") //extract in the future (createExercise, validateCreateExercise)
+                        "/createExercise","/validateCreateExercise", "/myWorkouts", "/loadWorkout").hasRole("USER") //extract in the future (createExercise, validateCreateExercise)
 
                 .antMatchers("/admin/**").hasRole("ADMIN")
 

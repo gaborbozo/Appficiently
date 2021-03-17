@@ -12,6 +12,7 @@ import hu.bozgab.Service.Interface.IWorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -39,25 +40,28 @@ public class WorkoutService implements IWorkoutService {
     }
 
     @Override
-    public List<Exercise> getAllExercises() {
-        return exerciseRepository.findAll();
-    }
-
-    @Override
-    public User getCurrentUser(long id) { return userRepository.findById(id); }
+    public User getCurrentUser(User user) { return userRepository.findById(user.getId()); }
 
     @Override
     public WorkoutInformation findWorkoutInformationById(long id) { return workoutInformationRepository.findById(id); }
 
     @Override
-    public void insertWorkout(WorkoutInformation workoutInformation) {
-        List<Workout> workouts = workoutInformation.getWorkouts();
+    public List<Exercise> getExercises() { return exerciseRepository.findAll(); }
 
+    @Override
+    public void saveWorkout(WorkoutManager workoutManager, User user) {
+
+        if (workoutManager.getWorkoutId() != null) {
+            workoutRepository.deleteAll(findWorkoutInformationById(workoutManager.getWorkoutId()).getWorkouts());
+            workoutInformationRepository.deleteById(workoutManager.getWorkoutId());
+        }
+
+        WorkoutInformation workoutInformation = new WorkoutInformation(user, workoutManager.getWorkoutName(), new Date());
         workoutInformationRepository.save(workoutInformation);
 
-        for(Workout item: workouts) {
-            item.setWorkoutInformation(workoutInformation);
-            workoutRepository.save(item);
-        }
+        for(Workout workout: workoutManager.getWorkouts()) workout.setWorkoutInformation(workoutInformation);
+
+        workoutRepository.saveAll(workoutManager.getWorkouts());
     }
+
 }

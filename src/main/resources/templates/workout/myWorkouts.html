@@ -14,9 +14,33 @@
 <header th:replace="layout/nav :: navbar">
 </header>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
+        <div th:replace="layout/parameters :: WorkoutParameters">
+        </div>
 
+        <div th:each="workoutsInfromation : ${workoutsInfromations}">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td class="bg-secondary" colspan="4">
+                            <div class="d-inline">
+                                <div class="d-inline display-6" th:text="${workoutsInfromation.getName()}"></div>
+                                <a th:href="@{'/loadWorkout?id=' + ${workoutsInfromation.getId()}}">Szerkesztés</a>
+                            </div>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="workout, iterator : ${workoutsInfromation.getWorkouts()}">
+                        <td class="col-1" th:text="${iterator.index+1}"></td>
+                        <td class="col-2" th:text="${workout.getExercise().getActivity()}"></td>
+                        <td class="col-1" th:text="${workout.getCount()}"></td>
+                        <td class="col-auto" th:text="${workout.getComment()}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 </script>

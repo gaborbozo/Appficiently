@@ -22,7 +22,7 @@ public class WorkoutInformation {
     @Column(name = "modified")
     private Date modified;
 
-    @OneToMany(mappedBy = "workoutInformation")
+    @OneToMany(mappedBy = "workoutInformation", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Workout> workouts = new ArrayList<>();
 
     public WorkoutInformation() {}

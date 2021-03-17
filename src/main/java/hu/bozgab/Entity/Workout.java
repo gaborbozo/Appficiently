@@ -22,11 +22,14 @@ public class Workout {
     @Column(name = "comment")
     private String comment;
 
-    public Workout() {}
+    public Workout() {
+        this.count = 1;
+    }
 
-    public Workout(Exercise exercise) {this.exercise = exercise; }
-
-    public Workout(String comment) {this.comment = comment; }
+    public Workout(Exercise exercise) {
+        this.count = 1;
+        this.exercise = exercise;
+    }
 
     public long getId() {
         return this.id;

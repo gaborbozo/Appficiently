@@ -10,6 +10,7 @@ import hu.bozgab.Repository.WorkoutRepository;
 import hu.bozgab.Repository.WorkoutInformationRepository;
 import hu.bozgab.Service.Interface.IWorkoutService;
 import hu.bozgab.Service.UserDetailsImpl;
+import hu.bozgab.Service.WorkoutManager;
 import hu.bozgab.Service.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,6 +33,8 @@ public class WorkoutController {
     @Qualifier("WorkoutService")
     IWorkoutService workoutService;
 
+    private WorkoutManager workoutManager;
+
     ExerciseRepository er;
     WorkoutRepository wr;
     UserRepository ur;
@@ -47,10 +50,13 @@ public class WorkoutController {
     public void setEr(WorkoutRepository wr) { this.wr = wr; }
 
     @Autowired
+    public void setWorkout_informationRepository(WorkoutInformationRepository workout_informationRepository) { this.workout_informationRepository = workout_informationRepository; }
+
+    @Autowired
     public void setWorkoutService(WorkoutService workoutService) { this.workoutService = workoutService; }
 
     @Autowired
-    public void setWorkout_informationRepository(WorkoutInformationRepository workout_informationRepository) { this.workout_informationRepository = workout_informationRepository; }
+    public void setWorkoutManager(WorkoutManager workoutManager) { this.workoutManager = workoutManager; }
 
     @RequestMapping("/createExercise")
     public String createExercise(Model model){
@@ -61,7 +67,7 @@ public class WorkoutController {
     }
 
     @PostMapping("/validateCreateExercise")
-    public String validateCreateExercise(@ModelAttribute Exercise exercise){
+    public String validateCreateExercise(@ModelAttribute Exercise exercise, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
         workoutService.saveExercise(exercise);
 
@@ -69,113 +75,93 @@ public class WorkoutController {
     }
 
     @RequestMapping("/manageWorkout")
-    public String manageWorkout(Model model, HttpSession session){
+    public String manageWorkout(Model model,@AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        @SuppressWarnings("unchecked")
-        List<Workout> workouts = (List<Workout>) session.getAttribute("WORKOUT_MANAGER");
-        if(workouts == null) {
-            workouts = new ArrayList<>();
-            session.setAttribute("WORKOUT_MANAGER", workouts);
-        }
-
-        @SuppressWarnings("unchecked")
-        String workoutName = (String) session.getAttribute("WORKOUT_NAME");
-        if(workoutName == null){
-            workoutName = "Edzés";
-            session.setAttribute("WORKOUT_NAME", workoutName);
-        }
-
-        model.addAttribute("workouts", workouts);
+        model.addAttribute("workouts", workoutManager.getWorkouts());
         model.addAttribute("workout", new Workout());
 
-        model.addAttribute("exercises",workoutService.getAllExercises());
+        model.addAttribute("exercises",workoutService.getExercises());
 
-        model.addAttribute("workoutName", workoutName);
+        model.addAttribute("workoutName", workoutManager.getWorkoutName());
         model.addAttribute("workoutInformation", new WorkoutInformation());
 
         return "workout/manageWorkout.html";
     }
 
     @RequestMapping("/loadWorkout")
-    public String loadWorkout(){
-        //Betölt id alapján amit a myworkouts ad át, globális változóban eltárol és a validateManageWorkoutnál a globális változó értékét figyelembe véve adunk a workout táblához edzést
-        return "redirect:/myWorkouts";
+    public String loadWorkout(@RequestParam(name = "id") long id){
+
+
+        if(workoutManager.getWorkouts().size() != 0)  return "redirect:/myWorkouts?activeManagement";
+
+        WorkoutInformation workoutInformation = workoutService.findWorkoutInformationById(id);
+
+        workoutManager.setWorkoutId(workoutInformation.getId());
+        workoutManager.setWorkoutName(workoutInformation.getName());
+        workoutManager.setWorkouts(workoutInformation.getWorkouts());
+
+        return "redirect:/manageWorkout";
     }
 
-    @RequestMapping("/validateManageWorkout")
-    public String validateManageWorkout(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpSession session) {
+    @PostMapping("/validateManageWorkout")
+    public String validateManageWorkout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        @SuppressWarnings("unchecked")
-        List<Workout> workouts = (List<Workout>) session.getAttribute("WORKOUT_MANAGER");
 
-        if(workouts == null) return "redirect:/manageWorkout";
+        if(workoutManager.getWorkouts().size() == 0) return "redirect:/manageWorkout?error";
+        if(workoutManager.getWorkoutName().length() == 0) return "redirect:/manageWorkout?errorName";
 
-        Long currentWorkoutId = (Long)session.getAttribute("WORKOUT_ID");
+        workoutService.saveWorkout(workoutManager, workoutService.getCurrentUser(userDetails.getUser()));
 
-        WorkoutInformation workoutInformation;
-        if(currentWorkoutId == null) {
-            workoutInformation = new WorkoutInformation(workoutService.getCurrentUser(userDetails.getId()),(String)session.getAttribute("WORKOUT_NAME"),new Date());
-        } else {
-            workoutInformation = workoutService.findWorkoutInformationById(currentWorkoutId.longValue());
-        }
-
-        workoutInformation.setWorkouts(workouts);
-
-        workoutService.insertWorkout(workoutInformation);
-
-        currentWorkoutId = null;
-        workouts.clear();
+        workoutManager = new WorkoutManager();
 
         return "redirect:/myWorkouts";
     }
 
     @PostMapping("/modifyWorkoutName")
-    public String modifyWorkoutName(HttpSession session, @ModelAttribute WorkoutInformation workoutInformation) {
+    public String modifyWorkoutName(@ModelAttribute WorkoutInformation workoutInformation) {
 
-        if(workoutInformation.getName().length() == 0) return "redirect:/manageWorkout";
-        session.setAttribute("WORKOUT_NAME", workoutInformation.getName());
+        workoutManager.setWorkoutName(workoutInformation.getName());
 
         return "redirect:/manageWorkout";
     }
 
     @RequestMapping("/addWorkoutItem")
-    public String addWorkoutItem(HttpSession session, @RequestParam(name = "id") int id){
+    public String addWorkoutItem(@RequestParam(name = "id") int id,@AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        @SuppressWarnings("unchecked")
-        List<Workout> workouts = (List<Workout>) session.getAttribute("WORKOUT_MANAGER");
-        if(workouts == null) return "redirect:/manageWorkout";
-        if(id >= 0 && id <= workouts.size()) {
-            workouts.add(id, new Workout(workoutService.getAllExercises().get(0)));
+        if(id >= 0 && id <= workoutManager.getWorkouts().size()) {
+            Workout workout = new Workout(workoutService.getExercises().get(0));
+            workoutManager.addWorkout(workout, id);
         }
 
         return "redirect:/manageWorkout";
     }
 
     @RequestMapping("/removeWorkoutItem")
-    public String removeWorkoutItem(HttpSession session, @RequestParam(name = "id") int id) {
+    public String removeWorkoutItem(@RequestParam(name = "id") int id) {
 
-        @SuppressWarnings("unchecked")
-        List<Workout> workouts = (List<Workout>) session.getAttribute("WORKOUT_MANAGER");
-        if(workouts == null) return "redirect:/manageWorkout";
-        if(id >= 0 && id <= workouts.size()-1) workouts.remove(id);
+        if(id >= 0 && id < workoutManager.getWorkouts().size() && workoutManager.getWorkouts().size() != 0) workoutManager.removeWorkout(id);
+        if(workoutManager.getWorkouts().size() == 0) workoutManager = new WorkoutManager();
 
         return "redirect:/manageWorkout";
     }
 
     @RequestMapping("/saveWorkoutItemToList")
-    public String saveWorkoutItemToList(HttpSession session, @RequestParam(name = "id") int id, @ModelAttribute Workout workout) {
+    public String saveWorkoutItemToList(@ModelAttribute Workout workout, @RequestParam(name = "id") int id) {
 
-        @SuppressWarnings("unchecked")
-        List<Workout> workouts = (List<Workout>) session.getAttribute("WORKOUT_MANAGER");
-        if(workouts == null) return "redirect:/manageWorkout";
-        if(id >= 0 && id <= workouts.size()) workouts.set(id, workout);
+        if(id >= 0 && id < workoutManager.getWorkouts().size()) {
+            if(workout.getCount() < 1 || workout.getCount() > 250) workout.setCount(1);
+            if(workout.getComment() == "") workout.setComment(null);
+            workoutManager.saveWorkout(workout, id);
+        }
 
         return "redirect:/manageWorkout";
     }
 
     @RequestMapping("/myWorkouts")
-    public String myWorkouts(){
+    public String myWorkouts(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
+        User user = workoutService.getCurrentUser(userDetails.getUser());
+        model.addAttribute("workoutsInfromations", workoutService.getCurrentUser(userDetails.getUser()).getWorkoutInformation());
 
         return "workout/myWorkouts.html";
     }
@@ -183,6 +169,8 @@ public class WorkoutController {
     @RequestMapping("/test")
     public String test(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpSession session){
         System.out.println("___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________");
+
+
 
         return "redirect:/index";
     }

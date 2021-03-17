@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface WorkoutRepository extends CrudRepository<Workout,Long> {
 
+    void deleteAllById(Long id);
+
 }

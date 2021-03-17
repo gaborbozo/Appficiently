@@ -1,0 +1,23 @@
+<div th:fragment="AuthorizationParameters">
+    <div class="alert alert-success" th:if="${param.registered}">
+        Sikeres regisztráció!
+    </div>
+    <div class="alert alert-danger" th:if="${param.error}">
+        Hibás felhasználói név és jelszó!
+    </div>
+    <div class="alert alert-success" th:if="${param.logout}">
+        Sikeres kijelentkezés!
+    </div>
+</div>
+
+<div th:fragment="WorkoutParameters">
+    <div class="alert alert-danger" th:if="${param.error}">
+        Hiba!
+    </div>
+    <div class="alert alert-danger" th:if="${param.errorName}">
+        Az edzés megnevezése kötelező!
+    </div>
+    <div class="alert alert-warning" th:if="${param.activeManagement}">
+        A betöltéshez előbb mentsd el vagy töröld a jelenlegi edzésed!
+    </div>
+</div>

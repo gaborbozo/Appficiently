@@ -16,59 +16,62 @@
 
 <div class="container">
     <div class="row">
+        <div th:replace="layout/parameters :: WorkoutParameters">
+        </div>
+
         <div th:if="${workouts.empty}">
             <h1 class="text-center">Üres vagyok :(. Kérlek <a href="/myWorkouts" class="text-decoration-none">válassz ki egy edzést</a>, vagy <a href="/addWorkoutItem?id=0" class="text-decoration-none">hozz létre egy újat.</a></h1>
         </div>
 
         <div th:if="${!workouts.empty}">
 
-            <form method="POST" th:action="@{'/validateManageWorkout'}">
-                <input type="submit" value="Edzés mentése" />
-            </form>
-
-            <form method="POST" target="addElement" th:action="@{'/modifyWorkoutName'}" th:object="${workoutInformation}">
-                <input type="text" name="name" placeholder="Edzés megnevezése" onchange="this.form.submit()" th:value="${workoutName}">
-            </form>
-
-            <div th:text="'Gyakorlatok jelenleg: ' + ${#lists.size(workouts)}"></div>
-
             <iframe name="addElement" style="display:none;"></iframe>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">Darabszám</th>
-                    <th scope="col">Megjegyzés</th>
-                    <th scope="col">#</th>
-                    <th scope="col">#</th>
-                    <th scope="col">#</th>
-                </tr>
-                </thead>
-                <tbody>
 
-                    <tr th:each="workout,getStat : ${workouts}">
+            <div class="row my-3">
 
-                        <form method="POST" target="addElement" th:id="'formPushItemToList' + ${getStat.index}" th:action="@{'/saveWorkoutItemToList?id='} + ${getStat.index}" th:object="${workout}">
+                <form method="POST" class="col-12 col-md-4" th:action="@{'/validateManageWorkout'}">
+                    <input type="submit" class="btn btn-primary" value="Edzés mentése" />
+                </form>
 
-                            <td> <input type="number" name="count" placeholder="Darabszám" th:value="${workout.getCount()}" th:onchange="'saveItem('+${getStat.index}+')'"> </td>
-                            <td> <input type="text" name="comment" placeholder="Megjegyzés" th:value="${workout.getComment()}" th:onchange="'saveItem('+${getStat.index}+')'"> </td>
-                            <td>
-                                <select name="exercise" th:onchange="'saveItem('+${getStat.index}+')'">
-                                    <option th:each="exercise : ${exercises}" th:value="${exercise.getId()}" th:text="${exercise.getActivity()}" th:selected="${workout.getExercise().getId() == exercise.getId()}"></option>
-                                </select>
-                            </td>
-                            <td><a th:href="@{'/addWorkoutItem?id=' + ${getStat.index}}">Új elem föl</a></td>
-                            <td><a th:href="@{'/addWorkoutItem?id=' + ${getStat.index+1}}">Új elem le</a></td>
-                            <td><a th:href="@{'/removeWorkoutItem?id=' + ${getStat.index}}">Elem törlése</a></td>
+                <form method="POST" class="col-12 col-md-4" target="addElement" th:action="@{'/modifyWorkoutName'}" th:object="${workoutInformation}">
+                    <label for="name">Edzés megnevezése</label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Edzés megnevezése" onchange="this.form.submit()" th:value="${workoutName}">
+                </form>
 
-                        </form>
+                <div class="col-12 col-md-4 text-md-end" th:text="'Gyakorlatok jelenleg: ' + ${#lists.size(workouts)}"></div>
+            </div>
 
-                    </tr>
+            <div class="card text-center my-4 border-2 border-dark" th:each="workout,iterator : ${workouts}">
+                <div class="card-header">
+                    <a class="btn btn-primary px-3" th:href="@{'/addWorkoutItem?id=' + ${iterator.index}}">Új elem beszúrása</a>
+                </div>
+                <div class="card-body">
+                    <form method="POST" target="addElement" th:id="'formPushItemToList' + ${iterator.index}" th:action="@{'/saveWorkoutItemToList?id='} + ${iterator.index}" th:object="${workout}">
+                        <div class="col-12 my-2">
+                            <label for="exercise">Gyakorlat</label>
+                            <select class="form-control" name="exercise" id="exercise" th:onchange="'saveItem('+${iterator.index}+')'">
+                                <option th:each="exercise : ${exercises}" th:value="${exercise.getId()}" th:text="${exercise.getActivity()}" th:selected="${workout.getExercise().getId() == exercise.getId()}"></option>
+                            </select>
+                        </div>
+                        <div class="col-12 my-2">
+                            <label for="count">Darabszám</label>
+                            <input type="number" class="form-control" name="count" id="count" placeholder="Darabszám" min="1" max="250" th:value="${workout.getCount()}" th:onchange="'saveItem('+${iterator.index}+')'">
+                        </div>
+                        <div class="col-12 my-2">
+                            <label for="comment">Megjegyzés</label>
+                            <input type="text" class="form-control" name="comment" id="comment" placeholder="Megjegyzés" th:value="${workout.getComment()}" th:onchange="'saveItem('+${iterator.index}+')'">
+                        </div>
+                    </form>
 
-                </tbody>
-            </table>
+                    <a class="btn btn-warning px-3" th:href="@{'/removeWorkoutItem?id=' + ${iterator.index}}">Elem törlése</a>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-primary px-3" th:href="@{'/addWorkoutItem?id=' + ${iterator.index+1}}">Új elem beszúrása</a>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
 </div>
 
 <script>

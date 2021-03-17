@@ -57,7 +57,7 @@ public class AuthenticationController {
 
         userService.registerUser(user);
 
-        return "redirect:/index?register";
+        return "redirect:/index?registered";
     }
 
     @RequestMapping("/settings")

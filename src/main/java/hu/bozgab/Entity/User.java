@@ -31,8 +31,8 @@ public class User {
     )
     private Set<Role> roles = new HashSet<Role>();
 
-    @OneToMany(mappedBy = "user")
-    private List<WorkoutInformation> workoutInformation = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<WorkoutInformation> workoutInformations = new HashSet<>();
 
     public User(){}
 
@@ -91,9 +91,9 @@ public class User {
         this.roles.add(new Role(roleName));
     }
 
-    public List<WorkoutInformation> getWorkoutInformation() { return this.workoutInformation; }
+    public Set<WorkoutInformation> getWorkoutInformation() { return this.workoutInformations; }
 
-    public void setWorkoutInformation(List<WorkoutInformation>workoutInformation) { this.workoutInformation = workoutInformation; }
+    public void setWorkoutInformation(Set<WorkoutInformation>workoutInformation) { this.workoutInformations = workoutInformation; }
 
-    public void addWorkoutInformation(WorkoutInformation workoutInformation) { this.workoutInformation.add(workoutInformation); }
+    public void addWorkoutInformation(WorkoutInformation workoutInformation) { this.workoutInformations.add(workoutInformation); }
 }
