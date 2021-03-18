@@ -11,8 +11,10 @@
 </head>
 <head th:replace="layout/head :: head"></head>
 <body>
-<header th:replace="layout/nav :: navbar">
-</header>
+    <header th:replace="layout/nav :: navbar">
+    </header>
+    <div th:replace="layout/parameters :: WorkoutParameters">
+    </div>
 
 <div class="container">
     <div class="row">
@@ -20,7 +22,7 @@
         </div>
 
         <div th:if="${workouts.empty}">
-            <h1 class="text-center">Üres vagyok :(. Kérlek <a href="/myWorkouts" class="text-decoration-none">válassz ki egy edzést</a>, vagy <a href="/addWorkoutItem?id=0" class="text-decoration-none">hozz létre egy újat.</a></h1>
+            <h1 class="text-center">Üres vagyok :( <a href="/myWorkouts" class="text-decoration-none">Válassz ki egy edzést</a> vagy <a href="/addWorkoutItem?id=0" class="text-decoration-none">hozz létre egy újat.</a></h1>
         </div>
 
         <div th:if="${!workouts.empty}">

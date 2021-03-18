@@ -11,11 +11,11 @@ public interface IWorkoutService {
 
     void saveExercise(Exercise exercise);
 
-    User getCurrentUser(User user);
+    void saveWorkout(WorkoutManager workoutManager, User user);
 
     WorkoutInformation findWorkoutInformationById(long id);
 
-    void saveWorkout(WorkoutManager workoutManager, User user);
-
     List<Exercise> getExercises();
+
+    List<WorkoutInformation> getWorkouts(User user);
 }

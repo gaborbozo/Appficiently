@@ -13,6 +13,8 @@ xmlns:th="http://www.thymeleaf.org">
 <body>
     <header th:replace="layout/nav :: navbar">
     </header>
+    <div th:replace="layout/parameters :: AuthorizationParameters">
+    </div>
 
     <div class="container">
         <div class="row">
@@ -30,9 +32,6 @@ xmlns:th="http://www.thymeleaf.org">
                     }
 
                 </style>
-
-                <div th:replace="layout/parameters :: AuthorizationParameters">
-                </div>
 
                 <form method="POST" name="Login" id="formLogin" th:action="@{/login}">
                     <h1>Bejelentkezés</h1>

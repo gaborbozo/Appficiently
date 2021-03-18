@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/","/index","/login","/registration","/validateRegistration").permitAll()
 
-                .antMatchers("/settings","/manageWorkout", "/validateManageWorkout",
+                .antMatchers("/settings", "/validatemodifyPassword", "/manageWorkout", "/validateManageWorkout",
                         "/addWorkoutItem", "/removeWorkoutItem", "/saveWorkoutItemToList" , "/modifyWorkoutName",
                         "/createExercise","/validateCreateExercise", "/myWorkouts", "/loadWorkout").hasRole("USER") //extract in the future (createExercise, validateCreateExercise)
 
@@ -34,13 +34,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and().formLogin()
                     .loginPage("/login")
-                    .failureUrl("/login?error")
+                    .failureUrl("/login?errorLogin")
                     .loginProcessingUrl("/login")
                     .defaultSuccessUrl("/index", true)
                     .permitAll()
                     .and()
                 .logout()
-                    .logoutSuccessUrl("/index?logout")
+                    .logoutSuccessUrl("/index?successLogout")
                     .permitAll();
     }
 

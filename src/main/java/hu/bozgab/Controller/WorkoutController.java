@@ -1,13 +1,8 @@
 package hu.bozgab.Controller;
 
 import hu.bozgab.Entity.Exercise;
-import hu.bozgab.Entity.User;
 import hu.bozgab.Entity.Workout;
 import hu.bozgab.Entity.WorkoutInformation;
-import hu.bozgab.Repository.ExerciseRepository;
-import hu.bozgab.Repository.UserRepository;
-import hu.bozgab.Repository.WorkoutRepository;
-import hu.bozgab.Repository.WorkoutInformationRepository;
 import hu.bozgab.Service.Interface.IWorkoutService;
 import hu.bozgab.Service.UserDetailsImpl;
 import hu.bozgab.Service.WorkoutManager;
@@ -23,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Controller
 public class WorkoutController {
@@ -34,23 +26,6 @@ public class WorkoutController {
     IWorkoutService workoutService;
 
     private WorkoutManager workoutManager;
-
-    ExerciseRepository er;
-    WorkoutRepository wr;
-    UserRepository ur;
-    WorkoutInformationRepository workout_informationRepository;
-
-    @Autowired
-    public void setUr(UserRepository ur) { this.ur = ur; }
-
-    @Autowired
-    public void setEr(ExerciseRepository er) { this.er = er; }
-
-    @Autowired
-    public void setEr(WorkoutRepository wr) { this.wr = wr; }
-
-    @Autowired
-    public void setWorkout_informationRepository(WorkoutInformationRepository workout_informationRepository) { this.workout_informationRepository = workout_informationRepository; }
 
     @Autowired
     public void setWorkoutService(WorkoutService workoutService) { this.workoutService = workoutService; }
@@ -92,7 +67,7 @@ public class WorkoutController {
     public String loadWorkout(@RequestParam(name = "id") long id){
 
 
-        if(workoutManager.getWorkouts().size() != 0)  return "redirect:/myWorkouts?activeManagement";
+        if(workoutManager.getWorkouts().size() != 0)  return "redirect:/myWorkouts?errorActiveManagement";
 
         WorkoutInformation workoutInformation = workoutService.findWorkoutInformationById(id);
 
@@ -108,9 +83,9 @@ public class WorkoutController {
 
 
         if(workoutManager.getWorkouts().size() == 0) return "redirect:/manageWorkout?error";
-        if(workoutManager.getWorkoutName().length() == 0) return "redirect:/manageWorkout?errorName";
+        if(workoutManager.getWorkoutName().length() == 0) return "redirect:/manageWorkout?errorWorkoutName";
 
-        workoutService.saveWorkout(workoutManager, workoutService.getCurrentUser(userDetails.getUser()));
+        workoutService.saveWorkout(workoutManager,userDetails.getUser());
 
         workoutManager = new WorkoutManager();
 
@@ -160,8 +135,7 @@ public class WorkoutController {
     @RequestMapping("/myWorkouts")
     public String myWorkouts(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        User user = workoutService.getCurrentUser(userDetails.getUser());
-        model.addAttribute("workoutsInfromations", workoutService.getCurrentUser(userDetails.getUser()).getWorkoutInformation());
+        model.addAttribute("workoutsInfromations", workoutService.getWorkouts(userDetails.getUser()));
 
         return "workout/myWorkouts.html";
     }
@@ -169,8 +143,6 @@ public class WorkoutController {
     @RequestMapping("/test")
     public String test(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpSession session){
         System.out.println("___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________TEST___________");
-
-
 
         return "redirect:/index";
     }

@@ -40,13 +40,15 @@ public class WorkoutService implements IWorkoutService {
     }
 
     @Override
-    public User getCurrentUser(User user) { return userRepository.findById(user.getId()); }
-
-    @Override
     public WorkoutInformation findWorkoutInformationById(long id) { return workoutInformationRepository.findById(id); }
 
     @Override
     public List<Exercise> getExercises() { return exerciseRepository.findAll(); }
+
+    @Override
+    public List<WorkoutInformation> getWorkouts(User user) {
+        return workoutInformationRepository.findAllByUserId(user.getId());
+    }
 
     @Override
     public void saveWorkout(WorkoutManager workoutManager, User user) {

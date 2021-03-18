@@ -11,12 +11,16 @@
 </head>
 <head th:replace="layout/head :: head"></head>
 <body>
-<header th:replace="layout/nav :: navbar">
-</header>
+    <header th:replace="layout/nav :: navbar">
+    </header>
+    <div th:replace="layout/parameters :: WorkoutParameters">
+    </div>
 
 <div class="container-fluid">
     <div class="row">
-        <div th:replace="layout/parameters :: WorkoutParameters">
+
+        <div th:if="${workoutsInfromations.empty}">
+            <h1 class="text-center">Üres vagyok :( <a href="/manageWorkout" class="text-decoration-none">Hozz létre egy edzést.</a></h1>
         </div>
 
         <div th:each="workoutsInfromation : ${workoutsInfromations}">

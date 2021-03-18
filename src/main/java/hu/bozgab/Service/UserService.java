@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -56,5 +57,22 @@ public class UserService implements IUserService, UserDetailsService {
 
         user.setRegistered(new Date());
         userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public Boolean setNewPassword(User user, String newPassword) {
+
+        long query = userRepository.modifyPassword(user.getId(), newPassword);
+
+        if(query == 1){
+            user.setPassword(newPassword);
+            return true;
+        } else if(query == 0){
+            return false;
+        } else {
+            System.out.println("ERROR! More then one password got changed at the same time!");
+            return false;
+        }
     }
 }

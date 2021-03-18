@@ -32,6 +32,8 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getPassword() { return user.getPassword(); }
 
+    public void setPassword(String password) { this.user.setPassword(password); }
+
     public User getUser() { return user; }
 
     public long getId() { return this.user.getId(); }

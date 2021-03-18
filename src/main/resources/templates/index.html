@@ -8,17 +8,17 @@ xmlns:th="http://www.thymeleaf.org">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Appficiently</title>
-</head>
 <head th:replace="layout/head :: head"></head>
-<body>
+</head>
     <header th:replace="layout/nav :: navbar">
     </header>
+    <div th:replace="layout/parameters :: AuthorizationParameters">
+    </div>
 
     <div class="container-fluid">
         <div class="row">
 
-            <div th:replace="layout/parameters :: AuthorizationParameters">
-            </div>
+
 
 
         </div>

@@ -13,11 +13,13 @@ xmlns:th="http://www.thymeleaf.org">
 <body>
     <header th:replace="layout/nav :: navbar">
     </header>
+    <div th:replace="layout/parameters :: AuthorizationParameters">
+    </div>
 
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div>Regisztráció ideje :</div>
+                <h3>Regisztráció ideje</h3>
                 <div th:text="${user.getRegistered()}"></div>
             </div>
             <div class="col-12">
@@ -29,24 +31,29 @@ xmlns:th="http://www.thymeleaf.org">
                 <input readonly type="text" class="form-control" name="username" id="username" required="true" th:value="${user.getUsername()}">
             </div>
 
-            <form>
+            <form method="POST" th:action="@{/validatemodifyPassword}" th:object="${passwordManager}">
                 <h1>Jelszó módosítás</h1>
 
                 <div class="col-12">
                     <label for="currentPassword">Jelenlegi jelszavad</label>
-                    <input type="password" class="form-control" id="currentPassword" placeholder="Jelenlegi jelszavad" required="true">
+                    <input type="text" class="form-control" name="password" id="currentPassword" placeholder="Jelenlegi jelszavad" required="true">
                 </div>
 
                 <div class="col-12">
                     <label for="newPassword">Új jelszavad</label>
-                    <input type="newPassword" class="form-control" id="newPassword" placeholder="Új jelszavad" required="true">
+                    <input type="text" class="form-control" name="newPassword" id="newPassword" placeholder="Új jelszavad" required="true">
                 </div>
 
                 <div class="col-12">
                     <label for="newPasswordAgain">Új jelszavad ismét</label>
-                    <input type="password" class="form-control" name="newPasswordAgain" id="newPasswordAgain" placeholder="Új jelszavad ismét" required="true">
+                    <input type="text" class="form-control" name="newPasswordAgain" id="newPasswordAgain" placeholder="Új jelszavad ismét" required="true">
                 </div>
+
+                <button class="btn btn-primary mt-2">
+                    Jelszó megváltoztatása
+                </button>
             </form>
+
         </div>
     </div>
 </body>

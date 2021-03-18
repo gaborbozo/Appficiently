@@ -1,12 +1,24 @@
 <div th:fragment="AuthorizationParameters">
-    <div class="alert alert-success" th:if="${param.registered}">
+    <div class="alert alert-danger" th:if="${param.error}">
+        Hiba!
+    </div>
+    <div class="alert alert-success" th:if="${param.succesRegistration}">
         Sikeres regisztráció!
     </div>
-    <div class="alert alert-danger" th:if="${param.error}">
-        Hibás felhasználói név és jelszó!
+    <div class="alert alert-danger" th:if="${param.errorLogin}">
+        Hibás felhasználói név vagy jelszó!
     </div>
-    <div class="alert alert-success" th:if="${param.logout}">
+    <div class="alert alert-success" th:if="${param.successLogout}">
         Sikeres kijelentkezés!
+    </div>
+    <div class="alert alert-danger" th:if="${param.errorIncorrectPassword}">
+        Hibás jelszó!
+    </div>
+    <div class="alert alert-danger" th:if="${param.errorPasswordsNotMatch}">
+        A jelszavak nem egyeznek!
+    </div>
+    <div class="alert alert-success" th:if="${param.successPassword}">
+        Jelszava sikeresen megváltozott!
     </div>
 </div>
 
@@ -14,10 +26,10 @@
     <div class="alert alert-danger" th:if="${param.error}">
         Hiba!
     </div>
-    <div class="alert alert-danger" th:if="${param.errorName}">
+    <div class="alert alert-danger" th:if="${param.errorWorkoutName}">
         Az edzés megnevezése kötelező!
     </div>
-    <div class="alert alert-warning" th:if="${param.activeManagement}">
+    <div class="alert alert-warning" th:if="${param.errorActiveManagement}">
         A betöltéshez előbb mentsd el vagy töröld a jelenlegi edzésed!
     </div>
 </div>

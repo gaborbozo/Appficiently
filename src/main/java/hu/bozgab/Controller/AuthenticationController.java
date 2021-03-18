@@ -3,6 +3,7 @@ package hu.bozgab.Controller;
 
 import hu.bozgab.Entity.User;
 import hu.bozgab.Service.Interface.IUserService;
+import hu.bozgab.Service.PasswordManager;
 import hu.bozgab.Service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,7 +38,7 @@ public class AuthenticationController {
     }
 
     @RequestMapping("/login")
-    public String login(HttpSession session){
+    public String login(){
 
         return "auth/login.html";
 
@@ -57,14 +58,28 @@ public class AuthenticationController {
 
         userService.registerUser(user);
 
-        return "redirect:/index?registered";
+        return "redirect:/index?succesRegistration";
     }
 
     @RequestMapping("/settings")
     public String getuser(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model){
 
         model.addAttribute("user", userDetails);
+        model.addAttribute("passwordManager", new PasswordManager());
 
         return "auth/settings.html";
+    }
+
+    @PostMapping("/validatemodifyPassword")
+    public String validatemodifyPassword(@ModelAttribute PasswordManager passwordManager, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        if(!passwordManager.getPassword().equals(userDetails.getPassword())) return "redirect:/settings?errorIncorrectPassword";
+        if(!passwordManager.getNewPassword().equals(passwordManager.getNewPasswordAgain())) return "redirect:/settings?errorPasswordsNotMatch";
+
+        Boolean query = userService.setNewPassword(userDetails.getUser(), passwordManager.getNewPassword());
+
+        if(!query) return "redirect:/settings?error";
+
+        return "redirect:/settings?successPassword";
     }
 }

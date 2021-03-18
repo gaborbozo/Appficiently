@@ -8,4 +8,6 @@ public interface IUserService {
     User findByUsername(String name);
 
     void registerUser(User user);
+
+    Boolean setNewPassword(User user, String password);
 }
